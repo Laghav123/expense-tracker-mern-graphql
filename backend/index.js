@@ -4,9 +4,13 @@ import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHt
 import express from 'express';
 import cors from 'cors'
 import http from 'http';
+import dotenv from 'dotenv';
 
 import { mergedResolvers } from "./resolvers/index.js";
 import { mergedTypeDefs } from "./TypeDefs/index.js";
+import { connectDB } from "./db/connectDB.js";
+
+dotenv.config();
 
 const app = express();
 const httpServer = http.createServer(app);
@@ -29,5 +33,6 @@ app.use(
 );
 
 await httpServer.listen({port: 4000});
+await connectDB(); 
 
 console.log(`Server is running at http://localhost:4000`);
