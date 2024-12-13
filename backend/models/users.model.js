@@ -24,4 +24,4 @@ const userSchema = new mongoose.Schema({
     },
 }, { timestamps: true });
 
-export const User = mongoose.model("User", userSchema);
+export const User = mongoose.model("User", userSchema); // now User is a mongoose model which have inherited functionalities like .save() .findById() .findOne() etc
