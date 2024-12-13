@@ -9,7 +9,7 @@ export const userResolver = {
                 const user = await  User.findById(userId);
                 return user;
             } catch (err) {
-                console.log("Error in user query: ",err);
+                console.error("Error in user query: ",err);
                 throw new Error(err.message || "Error getting User");
             }
         },
@@ -18,7 +18,7 @@ export const userResolver = {
                 const user = await context.getUser();
                 return user;
             } catch (err) {
-                console.log("Error in authUser: ",err);
+                console.error("Error in authUser: ",err);
                 throw new Error(err.message || "Error getting Auth User");
             }
         },
@@ -56,7 +56,7 @@ export const userResolver = {
                 await context.login(newUser);
                 return newUser;
             } catch (err) {
-                console.log("Error in SignUp", err);
+                console.error("Error in SignUp", err);
                 throw new Error(err.message || "Internal Server Error");
             }
         },
@@ -68,7 +68,7 @@ export const userResolver = {
                 
                 await context.login(user);
             } catch (err) {
-                console.log("Error in Login", err);
+                console.error("Error in Login", err);
                 throw new Error(err.message || "Internal Server Error");
             }
         },
@@ -83,9 +83,11 @@ export const userResolver = {
                 res.clearCookie("connect.sid");
                 return {message: "Logged Out Successfully"};
             } catch (err) {
-                console.log("Error in Logout", err);
+                console.error("Error in Logout", err);
                 throw new Error(err.message || "Internal Server Error");
             }
         },
     } 
+
+    // TODO: add relationship between user and transaction
 }
