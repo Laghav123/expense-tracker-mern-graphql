@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 import { formatDate } from "../utils/formatDate";
 import { useMutation } from "@apollo/client";
 import { DELETE_TRANSACTION } from "../graphql/mutations/transaction.mutation";
-import { GET_TRANSACTIONS } from "../graphql/queries/transaction.query.js";
+import { GET_CATEGORY_STATISTICS, GET_TRANSACTIONS } from "../graphql/queries/transaction.query.js";
 import toast from 'react-hot-toast';
 
 const categoryColorMap = {
@@ -26,7 +26,7 @@ const Card = ({ transaction }) => {
 	const formattedDate = formatDate(date);
 	
 	const [DeleteTransaction, {loading}] = useMutation(DELETE_TRANSACTION,{
-		refetchQueries: [GET_TRANSACTIONS]
+		refetchQueries: [GET_TRANSACTIONS, GET_CATEGORY_STATISTICS]
 	});
 
 	const handleDelete = async () =>{

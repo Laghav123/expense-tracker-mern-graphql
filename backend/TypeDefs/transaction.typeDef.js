@@ -13,7 +13,7 @@ export const transactionTypeDef = `#graphql
     type Query {
         transactions: [Transaction!]
         transaction(transactionId: ID!): Transaction
-        # TODO: Add categoryStatics query
+        categoryStatistics: [CategoryStatistics!]
     }
 
     type Mutation {
@@ -39,5 +39,10 @@ export const transactionTypeDef = `#graphql
         amount: Float
         location: String
         date: String
+    }
+
+    type CategoryStatistics {
+        category: String!
+        totalAmount: Float!
     }
 `
