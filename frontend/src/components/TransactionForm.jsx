@@ -68,6 +68,7 @@ const TransactionForm = () => {
 							id='paymentType'
 							name='paymentType'
 						>
+							<option value={"upi"}>UPI</option>
 							<option value={"card"}>Card</option>
 							<option value={"cash"}>Cash</option>
 						</select>
@@ -97,7 +98,7 @@ const TransactionForm = () => {
 							id='category'
 							name='category'
 						>
-							<option value={"savings"}>Saving</option>
+							<option value={"savings"}>Savings</option>
 							<option value={"expense"}>Expense</option>
 							<option value={"investment"}>Investment</option>
 						</select>
@@ -116,7 +117,7 @@ const TransactionForm = () => {
 				{/* AMOUNT */}
 				<div className='w-full flex-1 mb-6 md:mb-0'>
 					<label className='block uppercase text-white text-xs font-bold mb-2' htmlFor='amount'>
-						Amount($)
+						Amount(Rs.)
 					</label>
 					<input
 						className='appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500'
@@ -142,7 +143,7 @@ const TransactionForm = () => {
 						id='location'
 						name='location'
 						type='text'
-						placeholder='New York'
+						placeholder='Hyderabad'
 					/>
 				</div>
 

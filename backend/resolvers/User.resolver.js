@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs"; // for hashing the passwords
 
 import { User } from '../models/users.model.js';
+import { Transaction } from '../models/transaction.model.js'
 
 export const userResolver = {
     Query: {
@@ -92,7 +93,17 @@ export const userResolver = {
                 throw new Error(err.message || "Internal Server Error");
             }
         },
-    } 
-
-    // TODO: add relationship between user and transaction
+    },
+    // Relationship between user and transaction
+    User:{
+        transactions: async(parent) => {
+            try {
+                const transactions = await Transaction.find({userId:parent._id});
+                return transactions;
+            } catch (error) {
+                console.error(error);
+                throw new Error(error.message);                
+            }
+        }
+    }
 }

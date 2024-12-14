@@ -15,22 +15,6 @@ import { useEffect, useState } from "react";
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const HomePage = ({authUser}) => {
-	// const chartData = {
-	// 	labels: ["Saving", "Expense", "Investment"],
-	// 	datasets: [
-	// 		{
-	// 			label: "%",
-	// 			data: [13, 8, 3],
-	// 			backgroundColor: ["rgba(75, 192, 192)", "rgba(255, 99, 132)", "rgba(54, 162, 235)"],
-	// 			borderColor: ["rgba(75, 192, 192)", "rgba(255, 99, 132)", "rgba(54, 162, 235, 1)"],
-	// 			borderWidth: 1,
-	// 			borderRadius: 30,
-	// 			spacing: 10,
-	// 			cutout: 130,
-	// 		},
-	// 	],
-	// };
-
 	const [chartData, setChartData] = useState({
 		labels: [],
 		datasets: [
@@ -120,9 +104,11 @@ const HomePage = ({authUser}) => {
 					{loading && <div className='w-6 h-6 border-t-2 border-b-2 mx-2 rounded-full animate-spin'></div>}
 				</div>
 				<div className='flex flex-wrap w-full justify-center items-center gap-6'>
-					<div className='h-[330px] w-[330px] md:h-[360px] md:w-[360px]  '>
-						<Doughnut data={chartData} />
-					</div>
+					{data?.categoryStatistics?.length ?
+						<div className='h-[330px] w-[330px] md:h-[360px] md:w-[360px]  '>
+							<Doughnut data={chartData} />
+						</div> : ``
+					}
 
 					<TransactionForm />
 				</div>
