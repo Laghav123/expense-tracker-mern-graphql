@@ -2,7 +2,7 @@ import { Transaction } from "../models/transaction.model.js";
 
 export const transactionResolver= {
     Query:{
-        transactions: async (_, _, context) => {
+        transactions: async (_, __, context) => {
             try {
                 if(!context.getUser()) throw new Error("Unauthorized");
                 const userId = context.getUser()._id;
@@ -28,7 +28,7 @@ export const transactionResolver= {
         // TODO: Add categoryStatics query
     },
     Mutation:{
-        createTransaction: async (_, input , context)=>{
+        createTransaction: async (_, {input} , context)=>{
             try {
                 // const {description, paymentType, category, amount, location, date} = input;
                 const newTransaction = new Transaction({
@@ -53,9 +53,9 @@ export const transactionResolver= {
             }
         },
 
-        deleteTransaction: async (parent, args, context)=>{
+        deleteTransaction: async (parent, {transactionId}, context)=>{
             try {
-                const deletedTransaction = await Transaction.findByIdAndDelete(input.transactionId);
+                const deletedTransaction = await Transaction.findByIdAndDelete(transactionId);
                 return deletedTransaction;
             } catch (err) {
                 console.error("Error deleting trancastion", err);

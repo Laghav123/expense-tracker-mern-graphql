@@ -5,10 +5,14 @@ import Cards from "../components/Cards";
 import TransactionForm from "../components/TransactionForm";
 
 import { MdLogout } from "react-icons/md";
+import toast from "react-hot-toast";
+import { useMutation } from "@apollo/client";
+import { LOGOUT } from "../graphql/mutations/users.mutation";
+import { GET_AUTHENTICATED_USER } from "../graphql/queries/users.query";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const HomePage = () => {
+const HomePage = ({authUser}) => {
 	const chartData = {
 		labels: ["Saving", "Expense", "Investment"],
 		datasets: [
@@ -25,11 +29,19 @@ const HomePage = () => {
 		],
 	};
 
-	const handleLogout = () => {
-		console.log("Logging out...");
+	const [logout, {loading}] = useMutation(LOGOUT, {
+		refetchQueries: [GET_AUTHENTICATED_USER]
+	});
+	
+	const handleLogout = async () => {
+		try {
+			await logout();
+			toast.success("Logged out successfully");
+		} catch (error) {
+			console.error(error);
+			toast.error(error.message);
+		}
 	};
-
-	const loading = false;
 
 	return (
 		<>
@@ -39,9 +51,10 @@ const HomePage = () => {
 						Spend wisely, track wisely
 					</p>
 					<img
-						src={"https://tecdn.b-cdn.net/img/new/avatars/2.webp"}
+						src={authUser.profilePicture}
 						className='w-11 h-11 rounded-full border cursor-pointer'
 						alt='Avatar'
+						title={authUser.name}
 					/>
 					{!loading && <MdLogout className='mx-2 w-5 h-5 cursor-pointer' onClick={handleLogout} />}
 					{/* loading spinner */}

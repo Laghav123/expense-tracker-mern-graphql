@@ -13,7 +13,7 @@ export const userResolver = {
                 throw new Error(err.message || "Error getting User");
             }
         },
-        authUser: async (_, _, context) => {
+        authUser: async (_, __, context) => {
             try {
                 const user = await context.getUser();
                 return user;
@@ -26,13 +26,15 @@ export const userResolver = {
     Mutation: {
         signUp: async(_, {input}, context) => {
             try {
-                const {userName, name, password, gender} = input;
-                if(!(userName && name && password && gender)){
+                console.log("Sign up input:", input);
+                const {username, name, password, gender} = input;
+                if(!(username && name && password && gender)){
                     throw new Error("All Fields are mandatory");
                 }
 
-                const existingUser = User.findOne({userName});
+                const existingUser = await User.findOne({username});
                 if(existingUser){
+                    console.log("existingUser:",existingUser);
                     throw new Error("User Already Exist.");
                 }
 
@@ -41,11 +43,11 @@ export const userResolver = {
 
                 // https://avatar-placeholder.iran.liara.run/document/#username
                 // API for generating random avatars
-                const boyProfilePicture = `https://avatar.iran.liara.run/public/boy?username=${userName}`;
-                const girlProfilePicture = `https://avatar.iran.liara.run/public/girl?username=${userName}`;
+                const boyProfilePicture = `https://avatar.iran.liara.run/public/boy?username=${username}`;
+                const girlProfilePicture = `https://avatar.iran.liara.run/public/girl?username=${username}`;
 
                 const newUser = new User({
-                    userName,
+                    username,
                     name,
                     password:hashedPassword,
                     gender,
@@ -63,8 +65,12 @@ export const userResolver = {
 
         login: async(_, {input}, context) => {
             try {
-                const {userName, password} = input;
-                const {user} = await context.authenticate("graphql-local", {userName, password});
+                const {username, password} = input;
+                if(!username || !password) {
+                    throw new Error("All fields are mandatory");
+                }
+                console.log("Input passed to authenticate:", { username, password });
+                const {user} = await context.authenticate("graphql-local", {username, password});
                 
                 await context.login(user);
             } catch (err) {
@@ -73,14 +79,13 @@ export const userResolver = {
             }
         },
 
-        logout: async(_, _, context) => {
-            const {login, authenticate} = context;
+        logout: async(_, __, context) => {
             try {
                 await context.logout();
-                req.session.destroy((err)=>{
+                context.req.session.destroy((err)=>{
                     if(err) throw err;
                 });
-                res.clearCookie("connect.sid");
+                context.res.clearCookie("connect.sid");
                 return {message: "Logged Out Successfully"};
             } catch (err) {
                 console.error("Error in Logout", err);
