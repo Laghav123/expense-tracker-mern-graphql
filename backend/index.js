@@ -14,17 +14,20 @@ import { mergedResolvers } from "./resolvers/index.js";
 import { mergedTypeDefs } from "./TypeDefs/index.js";
 import { connectDB } from "./db/connectDB.js";
 import { configurePassport } from './passport/passport.config.js';
+import path from 'path';
 
+process.env.NODE_ENV = process.env.NODE_ENV || "production";
 dotenv.config();
 configurePassport();
 
 const app = express();
 const httpServer = http.createServer(app);
+const __dirname = path.resolve();
 
 // Session Auth Setup using 'session' middleware from 'express-session' with MongoDBStore
 const MongoDBStore = connectMongo(session);
 const store = new MongoDBStore({
-    mongoUrl: process.env.MONGO_URI,
+    uri: process.env.MONGO_URI,
     collection: "sessions",
 });
 store.on("error", (err)=> console.log("MongoDBStore Error: ",err.message));
@@ -48,6 +51,7 @@ app.use(passport.session());
 const server=new ApolloServer({
     typeDefs: mergedTypeDefs,
     resolvers: mergedResolvers,
+    introspection: process.env.NODE_ENV !== "production",
     plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
 });
 
@@ -65,7 +69,13 @@ app.use(
     }),
 );
 
-await httpServer.listen({port: 4000});
+// after the build there will be a dist folder which contains the frontend build
+app.use(express.static(path.join(__dirname, "frontend/dist")));
+app.get("*",(req, res)=>{
+    res.sendFile(path.join(__dirname, "frontend/dist", "index.html"));
+})
+
+httpServer.listen({ port: 4000 });
 await connectDB(); 
 
-console.log(`Server is running at http://localhost:4000`);
+console.log(`Server is live`);

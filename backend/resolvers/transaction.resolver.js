@@ -15,9 +15,10 @@ export const transactionResolver= {
             }
         },
 
-        transaction: async (_, {transsactionId}, context) => {
+        transaction: async (_, {transactionId}, context) => {
             try {
-                const transaction = Transaction.findOne({transsactionId});
+                console.log("transactionId: ",transactionId);
+                const transaction = Transaction.findById(transactionId);
                 return transaction;
             } catch (err) {
                 console.error("Error getting transaction:", err );

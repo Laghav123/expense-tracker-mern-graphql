@@ -1,16 +1,15 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import TransactionFormSkeleton from "./TransactionPageSkeleton";
 import { useMutation, useQuery } from "@apollo/client";
 import { GET_CATEGORY_STATISTICS, GET_TRANSACTION } from "../graphql/queries/transaction.query";
-import { formatDate } from "../utils/formatDate";
 import { UPDATE_TRANSACTION } from "../graphql/mutations/transaction.mutation";
 import toast from "react-hot-toast";
 
 const TransactionPage = () => {
 	const {id} = useParams();
 	const {data, loading} = useQuery(GET_TRANSACTION, {variables:{id}});
-	console.log(data);
+	const navigate = useNavigate();
 
 	const [formData, setFormData] = useState({
 		description: "",
@@ -43,6 +42,7 @@ const TransactionPage = () => {
 				}}
 			});
 			toast.success("Transaction Updated");
+			navigate("/");
 		} catch (error) {
 			console.error(error);
 			toast.error("Updation Failed")
