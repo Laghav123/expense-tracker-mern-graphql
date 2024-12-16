@@ -9,16 +9,17 @@ import passport from "passport";
 import { buildContext } from "graphql-passport";
 import cors from 'cors'
 import dotenv from 'dotenv';
-
-import { mergedResolvers } from "./resolvers/index.js";
-import { mergedTypeDefs } from "./TypeDefs/index.js";
-import { connectDB } from "./db/connectDB.js";
-import { configurePassport } from './passport/passport.config.js';
 import path from 'path';
 
-process.env.NODE_ENV = process.env.NODE_ENV || "production";
+import { connectDB } from "./db/connectDB.js";
+import { mergedResolvers } from "./resolvers/index.js";
+import { mergedTypeDefs } from "./TypeDefs/index.js";
+import { configurePassport } from './passport/passport.config.js';
+import { cronJob } from './cron.js';
+
 dotenv.config();
 configurePassport();
+cronJob.start();
 
 const app = express();
 const httpServer = http.createServer(app);
